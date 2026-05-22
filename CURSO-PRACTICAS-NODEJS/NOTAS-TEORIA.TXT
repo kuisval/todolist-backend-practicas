@@ -40,3 +40,9 @@ las APIs son una interfaz entre programas, por ejemplo uno que se ejecute en el 
 nodejs es escalable, su rendimiento se ADAPTA a medida que crece el uso de la app y reciba mas solicitudes
 
 NODEJS NO ES UN LENGUAJE DE PROGRAMACION, ES UN ENTORNO DE EJECUCION PARA JAVASCRIPT
+
+un modulo es una funcionalidad organizada reutilizable
+
+en javascript enfocado a modulos y funciones, require es diferente de import, para funciones de modulos se REQUIEREN en otro modulo
+
+en el archivo json se declara si es de tipo commonjs u modular, con commonjs usamos require y con modular es puro import 
