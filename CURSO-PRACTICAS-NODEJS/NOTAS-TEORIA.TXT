@@ -1,0 +1,42 @@
+Nodejs es un entorno de ejecucion de javascript
+orientado especificamente a los eventos asincronos
+
+con entorno nos referimos a la infraestructura que nos permitira ejecutar el codigo
+por ejemplo para ejecutar javascript, node nos dara esa INFRAESTRUCTURA ESE DOMINIO DE ejecucion
+
+la diferencia radica en que javascript antes lo podiamos ejecutar en el navegador, con Nodejs
+se ejecutaria en la consola u terminal
+
+un evento asincrono es una ejecucion/evento independiente de la ejecucion principal del programa
+la misma puede esperar a ejecutarse sin afectar a la ejecucion principal, osea
+sin parar todo el flujo de trabajo del programa
+
+un ejemplo de esto es cuando hacemos una peticion a una base de datos para que nos retorne informacion
+le damos click al boton y ahora el evento debe esperar la conexion a servido que luego da a la base de datos
+y que esta nos reenvie la informacion pedida de vuelta, haciendo todo esto sin parar el flujo principal 
+del sistema 
+
+un evento/ejecucion sincrona, es una que va del a mano con la ejecucion principal del programa
+ahora si, si esta se ejecuta y hay un tiempo de espera, todo el flujo para hasta que se ejecute 
+
+el modelo u arquitectura CLIENTE-SERVIDOR, es uno el cual el cliente hace una peticion a un servidor 
+para que le envie recursos y este los manda, un ejemplo simple es cuando abro una pagina en el navegador
+el navegador con los protocolos correspondientes hace esa peticion al servidor y esta la devuelva con los
+recursos que pedi, osea, la pagina web
+
+front end - se encarga de los componentes visuales que ve el usuario y un poco de la logica - LO QUE EL USUARIO VE
+back end - se encarga de el desarrollo de los servidores - LO QUE EL USUARIO NO VE
+
+tomemos en cuenta algo, muchas veces el navegador no entiende al servidor, no manejan el mismo formato
+U IDIOMA, para poder hacer esta conexion posible se utilizan PROTOCOLOS, estos son el HTTP y el HTTPS
+
+NODEJS entra aqui como el encargado de desarrollar los servidores, de manejar las peticiones del navegador 
+
+una pagina web estatica es una que carga y ya no tiene ningun cambio, como un bloc
+una pagina web dinamica es una que carga y puede cambiar dependiendo de las peticiones que haga el cliente
+
+las APIs son una interfaz entre programas, por ejemplo uno que se ejecute en el ciente y otro en el servidor
+
+nodejs es escalable, su rendimiento se ADAPTA a medida que crece el uso de la app y reciba mas solicitudes
+
+NODEJS NO ES UN LENGUAJE DE PROGRAMACION, ES UN ENTORNO DE EJECUCION PARA JAVASCRIPT
