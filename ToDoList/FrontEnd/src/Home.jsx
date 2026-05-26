@@ -2,23 +2,23 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { TaskInput, TaskItem, FilterBar } from './components';
 import {
-    getTasks,
-    createTask,
-    updateTaskText,
-    toggleTaskCompleted,
-    deleteTask,
+  getTasks,
+  createTask,
+  updateTaskText,
+  toggleTaskCompleted,
+  deleteTask,
 } from './services/taskService';
 
 const PageWrapper = styled.div`
-    min-height: 100vh;
-    background-color: #f5f5f7;
-    display: flex;
-    justify-content: center;
-    padding: 48px 16px;
+  min-height: 100vh;
+  background-color: #f5f5f7;
+  display: flex;
+  justify-content: center;
+  padding: 48px 16px;
 `;
 
 const Card = styled.div`
-    background: white;
+  background: white;
   border-radius: 20px;
   padding: 40px;
   width: 100%;
@@ -27,11 +27,34 @@ const Card = styled.div`
   height: fit-content;
 `;
 
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+`;
+
 const Title = styled.h1`
   font-size: 28px;
   font-weight: 700;
   color: #1a1a1a;
-  margin: 0 0 8px;
+  margin: 0;
+`;
+
+const LogoutBtn = styled.button`
+  padding: 7px 16px;
+  background: transparent;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #dc2626;
+    color: #dc2626;
+  }
 `;
 
 const Subtitle = styled.p`
@@ -72,7 +95,7 @@ const EmptyMessage = styled.p`
   padding: 40px 0;
 `;
 
-function Home() {
+function Home({ username, onLogout }) {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('all');
   const [error, setError] = useState(null);
@@ -141,10 +164,15 @@ function Home() {
   return (
     <PageWrapper>
       <Card>
-        <Title>📝 To-Do List</Title>
+        <Header>
+          <Title>📝 To-Do List</Title>
+          <LogoutBtn onClick={onLogout}>Cerrar sesión</LogoutBtn>
+        </Header>
+
         <Subtitle>
+          Hola, <strong>{username}</strong> —{' '}
           {pendingCount === 0
-            ? '¡Todo listo! No tienes tareas pendientes.'
+            ? '¡No tienes tareas pendientes!'
             : `Tienes ${pendingCount} tarea${pendingCount !== 1 ? 's' : ''} pendiente${pendingCount !== 1 ? 's' : ''}`}
         </Subtitle>
 
