@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { TaskInput, TaskItem, FilterBar } from './components';
+import { TaskInput, TaskList } from './index';
 import {
   getTasks,
   createTask,
@@ -79,22 +79,6 @@ const LoadingMessage = styled.p`
   padding: 40px 0;
 `;
 
-const TaskList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const EmptyMessage = styled.p`
-  text-align: center;
-  color: #bbb;
-  font-size: 15px;
-  padding: 40px 0;
-`;
-
 function Home({ username, onLogout }) {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('all');
@@ -155,10 +139,6 @@ function Home({ username, onLogout }) {
     }
   };
 
-  const filteredTasks = filter === 'pending'
-    ? tasks.filter((t) => !t.completed)
-    : tasks;
-
   const pendingCount = tasks.filter((t) => !t.completed).length;
 
   return (
@@ -180,28 +160,17 @@ function Home({ username, onLogout }) {
 
         <TaskInput onAdd={handleAdd} />
 
-        <FilterBar filter={filter} onFilterChange={setFilter} />
-
         {loading ? (
           <LoadingMessage>Cargando tareas...</LoadingMessage>
-        ) : filteredTasks.length === 0 ? (
-          <EmptyMessage>
-            {filter === 'pending'
-              ? '¡No hay tareas pendientes!'
-              : 'Agrega tu primera tarea arriba.'}
-          </EmptyMessage>
         ) : (
-          <TaskList>
-            {filteredTasks.map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                onToggle={handleToggle}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-            ))}
-          </TaskList>
+          <TaskList
+            tasks={tasks}
+            filter={filter}
+            onFilterChange={setFilter}
+            onToggle={handleToggle}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         )}
       </Card>
     </PageWrapper>

@@ -111,7 +111,7 @@ const ErrorMsg = styled.p`
   margin-bottom: 16px;
 `;
 
-function Login({ onAuth }) {
+export function Login({ onAuth }) {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
