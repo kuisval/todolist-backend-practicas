@@ -46,3 +46,16 @@ un modulo es una funcionalidad organizada reutilizable
 en javascript enfocado a modulos y funciones, require es diferente de import, para funciones de modulos se REQUIEREN en otro modulo
 
 en el archivo json se declara si es de tipo commonjs u modular, con commonjs usamos require y con modular es puro import 
+
+Los modulos node js Built-In, son modulos ya incorporados sin necesidad de descargar nada,
+utiles para tareas comunes en node js:
+-HTTP
+-HTTPS
+-fs (file system)
+-os (operating sistem)
+-path y muchos mas
+
+el modulo console es console.log, para imitar la consola de los navegadores 
+
+el modulo process nos ayuda a dar mas informacion sobre el proceso que se este ejecutando en el nodejs
+y tambien puede tener cierto control sobre el mismo
