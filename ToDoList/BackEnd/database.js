@@ -1,18 +1,16 @@
 const Database = require('better-sqlite3');
 const path = require('path');
 
-// El archivo .db se crea automáticamente en la carpeta BackEnd
 const db = new Database(path.join(__dirname, 'todolist.db'));
 
-// Activar foreign keys
 db.pragma('foreign_keys = ON');
 
-// Crear tablas si no existen
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
     username  TEXT    NOT NULL UNIQUE,
-    password  TEXT    NOT NULL
+    password  TEXT,
+    google_id TEXT    UNIQUE
   );
 
   CREATE TABLE IF NOT EXISTS tasks (

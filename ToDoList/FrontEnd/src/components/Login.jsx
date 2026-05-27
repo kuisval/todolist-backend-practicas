@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { login, register } from '../services/taskService';
-
+import { GoogleLogin } from '@react-oauth/google';
 const Wrapper = styled.div`
   min-height: 100vh;
   background-color: #f5f5f7;
@@ -111,6 +111,25 @@ const ErrorMsg = styled.p`
   margin-bottom: 16px;
 `;
 
+const Divider = styled.p`
+  text-align: center;
+  color: #ccc;
+  font-size: 13px;
+  margin: 20px 0 16px;
+  position: relative;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 42%;
+    height: 1px;
+    background: #e0e0e0;
+  }
+  &::before { left: 0; }
+  &::after  { right: 0; }
+`;
+
 export function Login({ onAuth }) {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
@@ -148,6 +167,12 @@ export function Login({ onAuth }) {
     if (e.key === 'Enter') handleSubmit();
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+  // El token de Google va al backend para verificarse
+  // En este flujo redirigimos directo a Google OAuth
+        window.location.href = 'http://localhost:3001/auth/google';
+        }; 
+
   return (
     <Wrapper>
       <Card>
@@ -181,6 +206,13 @@ export function Login({ onAuth }) {
         <Button onClick={handleSubmit} disabled={loading}>
           {loading ? 'Cargando...' : isLogin ? 'Iniciar sesión' : 'Registrarse'}
         </Button>
+
+
+        <Divider>o</Divider>
+        <GoogleLogin
+        onSuccess={handleGoogleSuccess}
+        onError={() => setError('Error al iniciar sesión con Google')}
+        />
 
         <Toggle>
           {isLogin ? '¿No tienes cuenta? ' : '¿Ya tienes cuenta? '}
