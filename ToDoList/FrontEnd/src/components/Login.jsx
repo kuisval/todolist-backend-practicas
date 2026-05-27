@@ -2,6 +2,8 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { login, register } from '../services/taskService';
 import { GoogleLogin } from '@react-oauth/google';
+import useAuthStore from '../store/useAuthStore';
+
 const Wrapper = styled.div`
   min-height: 100vh;
   background-color: #f5f5f7;
@@ -130,32 +132,25 @@ const Divider = styled.p`
   &::after  { right: 0; }
 `;
 
-export function Login({ onAuth }) {
-  const [isLogin, setIsLogin] = useState(true);
+export function Login() {
+  const { login, register } = useAuthStore();
+  const [isLogin, setIsLogin]   = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [error, setError]       = useState(null);
+  const [loading, setLoading]   = useState(false);
 
   const handleSubmit = async () => {
     if (!username.trim() || !password.trim()) {
       setError('Completa todos los campos');
       return;
     }
-
     setLoading(true);
     setError(null);
-
     try {
-      const data = isLogin
+      isLogin
         ? await login(username, password)
         : await register(username, password);
-
-      // Guardar token y username en localStorage
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('username', data.username);
-
-      onAuth(data.username); // avisar a App que ya está autenticado
     } catch (err) {
       setError(err.message);
     } finally {

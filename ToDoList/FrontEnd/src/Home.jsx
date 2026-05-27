@@ -1,20 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
-import { TaskInput, TaskList } from './index';
-import {
-  getTasks,
-  createTask,
-  updateTaskText,
-  toggleTaskCompleted,
-  deleteTask,
-} from './services/taskService';
+import { TaskInput, TaskList, CalendarPanel } from './index';
+import useAuthStore from './store/useAuthStore';
+import useTaskStore from './store/useTaskStore';
 
 const PageWrapper = styled.div`
   min-height: 100vh;
   background-color: #f5f5f7;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   padding: 48px 16px;
+  gap: 24px;
 `;
 
 const Card = styled.div`
@@ -50,11 +47,7 @@ const LogoutBtn = styled.button`
   color: #888;
   cursor: pointer;
   transition: all 0.2s;
-
-  &:hover {
-    border-color: #dc2626;
-    color: #dc2626;
-  }
+  &:hover { border-color: #dc2626; color: #dc2626; }
 `;
 
 const Subtitle = styled.p`
@@ -79,74 +72,23 @@ const LoadingMessage = styled.p`
   padding: 40px 0;
 `;
 
-function Home({ username, onLogout }) {
-  const [tasks, setTasks] = useState([]);
-  const [filter, setFilter] = useState('all');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+function Home() {
+  const { username, logout }           = useAuthStore();
+  const { fetchTasks, loading, error } = useTaskStore();
+  const pendingCount = useTaskStore(
+    (state) => state.tasks.filter((t) => !t.completed).length
+  );
 
   useEffect(() => {
     fetchTasks();
   }, []);
-
-  const fetchTasks = async () => {
-    try {
-      setLoading(true);
-      const data = await getTasks();
-      setTasks(data);
-      setError(null);
-    } catch {
-      setError('No se pudo conectar con el servidor. ¿Está corriendo el backend?');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleAdd = async (text) => {
-    try {
-      const newTask = await createTask(text);
-      setTasks((prev) => [...prev, newTask]);
-      setError(null);
-    } catch {
-      setError('Error al crear la tarea.');
-    }
-  };
-
-  const handleToggle = async (id, completed) => {
-    try {
-      const updated = await toggleTaskCompleted(id, completed);
-      setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
-    } catch {
-      setError('Error al actualizar la tarea.');
-    }
-  };
-
-  const handleEdit = async (id, text) => {
-    try {
-      const updated = await updateTaskText(id, text);
-      setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
-    } catch {
-      setError('Error al editar la tarea.');
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await deleteTask(id);
-      setTasks((prev) => prev.filter((t) => t.id !== id));
-    } catch {
-      setError('Error al eliminar la tarea.');
-    }
-  };
-
-  const pendingCount = tasks.filter((t) => !t.completed).length;
 
   return (
     <PageWrapper>
       <Card>
         <Header>
           <Title>📝 To-Do List</Title>
-          <LogoutBtn onClick={onLogout}>Cerrar sesión</LogoutBtn>
+          <LogoutBtn onClick={logout}>Cerrar sesión</LogoutBtn>
         </Header>
 
         <Subtitle>
@@ -158,21 +100,16 @@ function Home({ username, onLogout }) {
 
         {error && <ErrorBanner>{error}</ErrorBanner>}
 
-        <TaskInput onAdd={handleAdd} />
+        <TaskInput />
 
         {loading ? (
           <LoadingMessage>Cargando tareas...</LoadingMessage>
         ) : (
-          <TaskList
-            tasks={tasks}
-            filter={filter}
-            onFilterChange={setFilter}
-            onToggle={handleToggle}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+          <TaskList />
         )}
       </Card>
+
+      <CalendarPanel />
     </PageWrapper>
   );
 }

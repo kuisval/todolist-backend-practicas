@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { TaskItem, FilterBar } from '../../index'
+import { TaskItem, FilterBar } from '../../index';
+import useTaskStore from '../../store/useTaskStore';
 
 const List = styled.ul`
   list-style: none;
@@ -17,14 +18,17 @@ const EmptyMessage = styled.p`
   padding: 40px 0;
 `;
 
-export function TaskList({ tasks, filter, onFilterChange, onToggle, onEdit, onDelete }) {
+export function TaskList() {
+  const tasks  = useTaskStore((state) => state.tasks);
+  const filter = useTaskStore((state) => state.filter);
+
   const filteredTasks = filter === 'pending'
     ? tasks.filter((t) => !t.completed)
     : tasks;
 
   return (
     <>
-      <FilterBar filter={filter} onFilterChange={onFilterChange} />
+      <FilterBar />
 
       {filteredTasks.length === 0 ? (
         <EmptyMessage>
@@ -35,13 +39,7 @@ export function TaskList({ tasks, filter, onFilterChange, onToggle, onEdit, onDe
       ) : (
         <List>
           {filteredTasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              onToggle={onToggle}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
+            <TaskItem key={task.id} task={task} />
           ))}
         </List>
       )}

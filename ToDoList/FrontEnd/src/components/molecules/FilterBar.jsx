@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { Button} from '../../index';
+import { Button } from '../../index';
+import useTaskStore from '../../store/useTaskStore';
 
 const Bar = styled.div`
   display: flex;
@@ -8,11 +9,14 @@ const Bar = styled.div`
 `;
 
 const FILTERS = [
-  { value: 'all', label: 'Todas' },
+  { value: 'all',     label: 'Todas'      },
   { value: 'pending', label: 'Pendientes' },
 ];
 
-export function FilterBar({ filter, onFilterChange }) {
+export function FilterBar() {
+  const filter      = useTaskStore((state) => state.filter);
+  const setFilter   = useTaskStore((state) => state.setFilter);
+
   return (
     <Bar>
       {FILTERS.map(({ value, label }) => (
@@ -21,7 +25,7 @@ export function FilterBar({ filter, onFilterChange }) {
           variant="filter"
           pill
           active={filter === value}
-          onClick={() => onFilterChange(value)}
+          onClick={() => setFilter(value)}
         >
           {label}
         </Button>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Input, Button } from '../../index';
+import useTaskStore from '../../store/useTaskStore';
 
 const Row = styled.div`
   display: flex;
@@ -8,12 +9,13 @@ const Row = styled.div`
   margin-bottom: 28px;
 `;
 
-export function TaskInput({ onAdd }) {
+export function TaskInput() {
   const [text, setText] = useState('');
+  const addTask = useTaskStore((state) => state.addTask);
 
   const handleSave = async () => {
     if (!text.trim()) return;
-    await onAdd(text);
+    await addTask(text);
     setText('');
   };
 

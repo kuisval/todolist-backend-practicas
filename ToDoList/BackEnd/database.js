@@ -18,6 +18,7 @@ db.exec(`
     user_id   INTEGER NOT NULL,
     text      TEXT    NOT NULL,
     completed INTEGER NOT NULL DEFAULT 0,
+    due_date  TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
 `);

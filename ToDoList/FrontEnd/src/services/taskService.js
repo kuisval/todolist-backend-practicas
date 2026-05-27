@@ -47,13 +47,23 @@ export const getTasks = async () => {
   return response.json();
 };
 
-export const createTask = async (text) => {
+export const createTask = async (text, due_date = null) => {
   const response = await fetch(`${BASE_URL}/tasks`, {
     method: 'POST',
     headers: authHeaders(),
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({ text, due_date }),
   });
   if (!response.ok) throw new Error('Error al crear la tarea');
+  return response.json();
+};
+
+export const updateDueDate = async (id, due_date) => {
+  const response = await fetch(`${BASE_URL}/tasks/${id}`, {
+    method: 'PUT',
+    headers: authHeaders(),
+    body: JSON.stringify({ due_date }),
+  });
+  if (!response.ok) throw new Error('Error al actualizar la fecha');
   return response.json();
 };
 
