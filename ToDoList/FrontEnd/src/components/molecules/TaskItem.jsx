@@ -21,16 +21,24 @@ const TaskLabel = styled.span`
   color: ${({ $completed }) => ($completed ? '#aaa' : '#1a1a1a')};
   text-decoration: ${({ $completed }) => ($completed ? 'line-through' : 'none')};
   transition: color 0.2s;
+  cursor: ${({ $clickable }) => ($clickable ? 'text' : 'default')};
+
+  &:hover {
+    color: ${({ $clickable }) => ($clickable ? '#4f46e5' : undefined)};
+  }
 `;
 
 const InputWrapper = styled.div`
   flex: 1;
+  min-width: 0;
+  max-width: 360px;
 `;
 
 const Actions = styled.div`
   display: flex;
   gap: 8px;
   flex-shrink: 0;
+  margin-left: auto;
 `;
 
 export function TaskItem({ task, onToggle, onEdit, onDelete }) {
@@ -71,7 +79,13 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }) {
           />
         </InputWrapper>
       ) : (
-        <TaskLabel $completed={task.completed}>{task.text}</TaskLabel>
+        <TaskLabel
+          $completed={task.completed}
+          onClick={() => !task.completed && setIsEditing(true)}
+          $clickable={!task.completed}
+        >
+          {task.text}
+        </TaskLabel>
       )}
 
       <Actions>

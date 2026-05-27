@@ -148,8 +148,8 @@ app.delete('/tasks/:id', authMiddleware, (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`📋 Endpoints:`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Endpoints disponibles:`);
   console.log(`   POST   /auth/register`);
   console.log(`   POST   /auth/login`);
   console.log(`   GET    /tasks`);
