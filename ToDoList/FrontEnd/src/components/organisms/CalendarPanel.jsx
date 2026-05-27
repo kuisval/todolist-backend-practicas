@@ -179,7 +179,7 @@ export function CalendarPanel() {
   return (
     <Panel>
       <PanelTitle>
-        <span>📅</span> Calendario
+        <span></span> Calendario
       </PanelTitle>
 
       <DayPicker

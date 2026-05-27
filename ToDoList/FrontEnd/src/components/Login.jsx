@@ -193,7 +193,7 @@ export function Login() {
   return (
     <Wrapper>
       <Card>
-        <Title>📋 To-Do List</Title>
+        <Title>To-Do List</Title>
         <Subtitle>{isLogin ? 'Inicia sesión para organizar tu día' : 'Crea tu cuenta y empieza hoy'}</Subtitle>
 
         {error && <ErrorMsg>{error}</ErrorMsg>}

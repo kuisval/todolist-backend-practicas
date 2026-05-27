@@ -26,7 +26,6 @@ const EmptyMessage = styled.p`
 
   /* Agregamos un emoji sutil integrado por CSS para dar un feedback amigable */
   &::before {
-    content: '✨'; 
     font-size: 20px;
     font-style: normal;
   }
