@@ -87,7 +87,7 @@ function Home() {
     <PageWrapper>
       <Card>
         <Header>
-          <Title>📝 To-Do List</Title>
+          <Title>To-Do List</Title>
           <LogoutBtn onClick={logout}>Cerrar sesión</LogoutBtn>
         </Header>
 

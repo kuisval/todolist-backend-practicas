@@ -8,46 +8,77 @@ import useTaskStore from '../../store/useTaskStore';
 const Item = styled.li`
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 10px;
-  border: 1.5px solid #e8e8e8;
-  background: #fff;
-  transition: box-shadow 0.2s;
+  gap: 16px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  
+  border: 1px solid ${({ $completed }) => ($completed ? '#f1f5f9' : '#e2e8f0')};
+  background: ${({ $completed }) => ($completed ? '#f8fafc' : '#ffffff')};
+  opacity: ${({ $completed }) => ($completed ? 0.75 : 1)};
+  
   position: relative;
-  &:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  transition: all 0.25s ease-in-out;
+
+  /* --- LA SOLUCIÓN AL BUG --- */
+  /* Si esta tarea específica tiene el calendario abierto, forzamos un z-index altísimo */
+  z-index: ${({ $hasCalendarOpen }) => ($hasCalendarOpen ? 50 : 1)};
+
+  &:hover { 
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+    transform: translateY(-1px);
+    
+    /* Cuando pasamos el mouse por encima de CUALQUIER tarea, le subimos un pelín el z-index 
+       para la animación, pero SIEMPRE respetando si otra tarea tiene el calendario abierto */
+    z-index: ${({ $hasCalendarOpen }) => ($hasCalendarOpen ? 50 : 2)};
+  }
 `;
 
 const TaskLabel = styled.span`
   flex: 1;
-  font-size: 15px;
-  color: ${({ $completed }) => ($completed ? '#aaa' : '#1a1a1a')};
+  font-size: 14px; /* Un punto menor para estilizar la línea */
+  font-weight: 400;
+  
+  /* Slate para tareas activas (más suave que el negro) y gris azulado para completadas */
+  color: ${({ $completed }) => ($completed ? '#94a3b8' : '#334155')};
   text-decoration: ${({ $completed }) => ($completed ? 'line-through' : 'none')};
-  transition: color 0.2s;
-  cursor: ${({ $clickable }) => ($clickable ? 'text' : 'default')};
-  &:hover { color: ${({ $clickable }) => ($clickable ? '#4f46e5' : undefined)}; }
+  
+  transition: color 0.2s ease;
+  cursor: ${({ $clickable }) => ($clickable ? 'pointer' : 'default')};
+  
+  /* Hover sutil con el azul de nuestra paleta */
+  &:hover { 
+    color: ${({ $clickable }) => ($clickable ? '#0284c7' : undefined)}; 
+  }
 `;
 
 const InputWrapper = styled.div`
   flex: 1;
   min-width: 0;
-  max-width: 300px;
+  max-width: 340px;
 `;
 
 const Actions = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 6px; /* Botones de acción un poco más juntos se ven más ordenados */
   flex-shrink: 0;
   margin-left: auto;
 `;
 
 const DueDateBadge = styled.span`
-  font-size: 12px;
-  color: ${({ $overdue }) => ($overdue ? '#dc2626' : '#6b7280')};
-  background: ${({ $overdue }) => ($overdue ? '#fee2e2' : '#f3f4f6')};
-  padding: 2px 8px;
-  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px; /* Totalmente tipo píldora */
   white-space: nowrap;
+  transition: all 0.2s;
+
+  /* Colores condicionales elegantes (Rojo coral sutil vs Azul cielo zen) */
+  color: ${({ $overdue }) => ($overdue ? '#991b1b' : '#0369a1')};
+  background: ${({ $overdue }) => ($overdue ? '#fef2f2' : '#e0f2fe')};
+  border: 1px solid ${({ $overdue }) => ($overdue ? '#fee2e2' : '#bae6fd')};
 `;
 
 const CalendarWrapper = styled.div`
@@ -62,7 +93,6 @@ export function TaskItem({ task }) {
 
   const { toggleTask, editTask, deleteTask, setDueDate } = useTaskStore();
 
-  // Cerrar calendario al hacer click fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (calendarRef.current && !calendarRef.current.contains(e.target)) {
@@ -98,12 +128,11 @@ export function TaskItem({ task }) {
     && new Date(task.due_date + 'T00:00:00') < new Date();
 
   return (
-    <Item>
+      <Item $completed={task.completed} $hasCalendarOpen={showCalendar}>
       <Checkbox
         checked={task.completed}
         onChange={() => toggleTask(task.id, !task.completed)}
       />
-
       {isEditing ? (
         <InputWrapper>
           <Input
@@ -124,11 +153,10 @@ export function TaskItem({ task }) {
         </TaskLabel>
       )}
 
-      {/* Badge de fecha */}
+      {/* Badge de fecha refinado */}
       {task.due_date && !isEditing && (
         <DueDateBadge $overdue={isOverdue}>
-          {isOverdue ? '⚠️ ' : '📅 '}
-          {format(new Date(task.due_date + 'T00:00:00'), 'dd MMM', { locale: es })}
+          {isOverdue ? '⚠️ Vencido' : '📅'} {format(new Date(task.due_date + 'T00:00:00'), 'dd MMM', { locale: es })}
         </DueDateBadge>
       )}
 
@@ -140,7 +168,6 @@ export function TaskItem({ task }) {
           </>
         ) : (
           <>
-            {/* Botón calendario */}
             <CalendarWrapper ref={calendarRef}>
               <Button
                 size="sm"
@@ -157,7 +184,9 @@ export function TaskItem({ task }) {
                 />
               )}
             </CalendarWrapper>
-            <Button size="sm" variant="soft" onClick={() => setIsEditing(true)}>Editar</Button>
+            {!task.completed && (
+              <Button size="sm" variant="soft" onClick={() => setIsEditing(true)}>Editar</Button>
+            )}
             <Button size="sm" variant="danger" onClick={() => deleteTask(task.id)}>Borrar</Button>
           </>
         )}

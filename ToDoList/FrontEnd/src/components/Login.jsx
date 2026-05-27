@@ -1,132 +1,156 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { login, register } from '../services/taskService';
 import { GoogleLogin } from '@react-oauth/google';
 import useAuthStore from '../store/useAuthStore';
 
 const Wrapper = styled.div`
   min-height: 100vh;
-  background-color: #f5f5f7;
+  /* Gradiente ultra suave que emula la calma del cielo matutino */
+  background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 24px;
 `;
 
 const Card = styled.div`
-  background: white;
-  border-radius: 20px;
+  background: #ffffff;
+  border-radius: 24px; /* Esquinas más suaves */
   padding: 40px;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  /* Sombra profunda pero muy difuminada para que se vea ligero */
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(226, 232, 240, 0.8);
 `;
 
 const Title = styled.h1`
-  font-size: 24px;
-  font-weight: 700;
-  color: #1a1a1a;
+  font-size: 26px;
+  font-weight: 600; /* Reducido de 700 a 600 para mayor elegancia */
+  color: #1e293b; /* Slate oscuro */
   margin: 0 0 8px;
   text-align: center;
+  letter-spacing: -0.02em;
 `;
 
 const Subtitle = styled.p`
-  color: #888;
+  color: #64748b; /* Gris azulado suave */
   font-size: 14px;
   text-align: center;
   margin: 0 0 32px;
 `;
 
 const Field = styled.div`
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 `;
 
 const Label = styled.label`
   display: block;
   font-size: 13px;
-  font-weight: 600;
-  color: #444;
+  font-weight: 500;
+  color: #475569;
   margin-bottom: 6px;
+  padding-left: 2px; /* Alineación ligera */
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 11px 14px;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 15px;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0; /* Borde ultra fino */
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1e293b;
+  background-color: #f8fafc;
   outline: none;
   box-sizing: border-box;
-  transition: border-color 0.2s;
+  transition: all 0.25s ease-in-out;
+
+  &::placeholder {
+    color: #94a3b8;
+  }
 
   &:focus {
-    border-color: #4f46e5;
+    border-color: #0284c7;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12); /* Sutil aura azul */
   }
 `;
 
 const Button = styled.button`
   width: 100%;
-  padding: 13px;
-  background-color: #4f46e5;
-  color: white;
+  padding: 14px;
+  background-color: #1e40af; /* Azul marino profundo corporativo y elegante */
+  color: #ffffff;
   border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  margin-top: 8px;
-  transition: background-color 0.2s;
+  margin-top: 12px;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: #4338ca;
+    background-color: #1d4ed8;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 
   &:disabled {
-    background-color: #a5b4fc;
+    background-color: #93c5fd;
+    opacity: 0.6;
     cursor: not-allowed;
+    box-shadow: none;
   }
 `;
 
 const Toggle = styled.p`
   text-align: center;
-  font-size: 14px;
-  color: #888;
-  margin-top: 20px;
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 24px;
 
   span {
-    color: #4f46e5;
-    font-weight: 600;
+    color: #0284c7; /* Azul link limpio */
+    font-weight: 500;
     cursor: pointer;
+    transition: color 0.2s;
 
     &:hover {
+      color: #0369a1;
       text-decoration: underline;
     }
   }
 `;
 
 const ErrorMsg = styled.p`
-  background: #fee2e2;
-  color: #dc2626;
-  padding: 10px 14px;
-  border-radius: 8px;
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fee2e2;
+  padding: 12px 16px;
+  border-radius: 10px;
   font-size: 13px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  font-weight: 500;
 `;
 
 const Divider = styled.p`
   text-align: center;
-  color: #ccc;
-  font-size: 13px;
-  margin: 20px 0 16px;
+  color: #94a3b8;
+  font-size: 12px;
+  margin: 24px 0 20px;
   position: relative;
 
   &::before, &::after {
     content: '';
     position: absolute;
     top: 50%;
-    width: 42%;
+    width: 40%;
     height: 1px;
-    background: #e0e0e0;
+    background: #e2e8f0;
   }
   &::before { left: 0; }
   &::after  { right: 0; }
@@ -154,7 +178,7 @@ export function Login() {
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      loading && setLoading(false);
     }
   };
 
@@ -163,16 +187,14 @@ export function Login() {
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
-  // El token de Google va al backend para verificarse
-  // En este flujo redirigimos directo a Google OAuth
-        window.location.href = 'http://localhost:3001/auth/google';
-        }; 
+    window.location.href = 'http://localhost:3001/auth/google';
+  }; 
 
   return (
     <Wrapper>
       <Card>
-        <Title>📝 To-Do List</Title>
-        <Subtitle>{isLogin ? 'Inicia sesión para ver tus tareas' : 'Crea tu cuenta'}</Subtitle>
+        <Title>📋 To-Do List</Title>
+        <Subtitle>{isLogin ? 'Inicia sesión para organizar tu día' : 'Crea tu cuenta y empieza hoy'}</Subtitle>
 
         {error && <ErrorMsg>{error}</ErrorMsg>}
 
@@ -199,18 +221,23 @@ export function Login() {
         </Field>
 
         <Button onClick={handleSubmit} disabled={loading}>
-          {loading ? 'Cargando...' : isLogin ? 'Iniciar sesión' : 'Registrarse'}
+          {loading ? 'Conectando...' : isLogin ? 'Ingresar' : 'Crear cuenta'}
         </Button>
 
-
-        <Divider>o</Divider>
-        <GoogleLogin
-        onSuccess={handleGoogleSuccess}
-        onError={() => setError('Error al iniciar sesión con Google')}
-        />
+        <Divider>o continúa con</Divider>
+        
+        {/* Contenedor sutil para centrar el botón nativo de Google */}
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => setError('Error al iniciar sesión con Google')}
+            theme="outline"
+            shape="rectangular"
+          />
+        </div>
 
         <Toggle>
-          {isLogin ? '¿No tienes cuenta? ' : '¿Ya tienes cuenta? '}
+          {isLogin ? '¿Nuevo por aquí? ' : '¿Ya tienes una cuenta? '}
           <span onClick={() => { setIsLogin(!isLogin); setError(null); }}>
             {isLogin ? 'Regístrate' : 'Inicia sesión'}
           </span>

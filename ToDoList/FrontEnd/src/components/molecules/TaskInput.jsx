@@ -5,8 +5,10 @@ import useTaskStore from '../../store/useTaskStore';
 
 const Row = styled.div`
   display: flex;
-  gap: 12px;
-  margin-bottom: 28px;
+  gap: 10px;            /* Unir ligeramente los elementos (de 12px a 10px) da una sensación de bloque unificado */
+  align-items: center; /* Garantiza que el input y el botón estén perfectamente centrados en el eje vertical */
+  margin-bottom: 32px;  /* Ampliamos un poco el margen inferior para que la zona de entrada "respire" respecto a la lista */
+  width: 100%;
 `;
 
 export function TaskInput() {
@@ -29,10 +31,14 @@ export function TaskInput() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Escribe una nueva tarea..."
+        placeholder="Añadir una nueva tarea..." /* Un verbo más ligero y cercano */
       />
-      <Button onClick={handleSave} disabled={!text.trim()}>
-        Guardar
+      <Button 
+        onClick={handleSave} 
+        disabled={!text.trim()}
+        variant="primary" /* Nos aseguramos de usar el azul marino profundo */
+      >
+        Añadir
       </Button>
     </Row>
   );

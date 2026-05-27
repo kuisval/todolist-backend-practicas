@@ -8,14 +8,28 @@ const List = styled.ul`
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px; /* Subimos de 10px a 12px para dar un milímetro extra de aire entre tarjetas */
 `;
 
 const EmptyMessage = styled.p`
   text-align: center;
-  color: #bbb;
-  font-size: 15px;
-  padding: 40px 0;
+  color: #94a3b8; /* Gris azulado suave en vez de gris plano */
+  font-size: 14px; /* Un toque más pequeño y estilizado */
+  font-weight: 400;
+  font-style: italic; /* Le da un aire más tranquilo y editorial */
+  padding: 48px 0; /* Aumentamos el padding para que el vacío se sienta intencional y limpio */
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  /* Agregamos un emoji sutil integrado por CSS para dar un feedback amigable */
+  &::before {
+    content: '✨'; 
+    font-size: 20px;
+    font-style: normal;
+  }
 `;
 
 export function TaskList() {
@@ -33,8 +47,8 @@ export function TaskList() {
       {filteredTasks.length === 0 ? (
         <EmptyMessage>
           {filter === 'pending'
-            ? '¡No hay tareas pendientes!'
-            : 'Agrega tu primera tarea arriba.'}
+            ? 'Todo al día. ¡Disfruta tu momento de calma!'
+            : 'Tu lista está vacía. Añade una tarea para comenzar.'}
         </EmptyMessage>
       ) : (
         <List>
